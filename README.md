@@ -1,3 +1,4 @@
+```
 <div class="switchcontrols">
     <div class="switchselect">
         <button name="selectSwitch">Switch</button>
@@ -35,3 +36,4 @@
         </button>
     </div>
 </div>
+```
