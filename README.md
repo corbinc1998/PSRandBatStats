@@ -1,3 +1,9 @@
+
+[Chrome Extensions Getting Started](https://developer.chrome.com/docs/extensions/get-started)
+[Smogon Pokemon Showdown](https://github.com/smogon/pokemon-showdown)
+
+
+
 ```
 <div class="switchcontrols">
     <div class="switchselect">
