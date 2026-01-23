@@ -1,0 +1,15 @@
+{
+    "name": "Random Battle Stats",
+    "description": "",
+    "version": "0.1",
+    "manifest_version": 3,
+    "permissions": ["activeTab", "scripting"],
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"]
+        }
+    ]
+}
+  
+  
