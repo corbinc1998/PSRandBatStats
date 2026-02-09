@@ -1,49 +1,82 @@
 // https://play.pokemonshowdown.com/battle-gen9randombattle
 // TODO:
     // add url check
+    // it runs multiple times
+    // getting the opponents team?
+    // getting user team wtihout opening switch tab
 
     
-
-
-const username = document.querySelector(".username")?.innerText || "*******";
-
+    // fetch("http://localhost:3000/team", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify(battleData)
+    // })
+    let my_result = ""
+    let my_rating = 0
+    let opponent_rating = 0
+    let team = []
+    let opponent = ""
+    let my_ratingChange = 0
+    const today = new Date().toISOString().split('T')[0]
+const username = document.querySelector(".username")?.innerText;
+let pokemon = ""
 const observer = new MutationObserver((mutations) => {
     // Team detection
     const data = document.getElementsByClassName("switchmenu");
     if (data.length > 0) {
-        console.log("my team:" + data[0].innerText);
+        pokemon = Array.from(data[0].children).map(button => button.innerText)
+        team = pokemon
     }
-
     // Check newly added nodes for the win message
     for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
             if (node.nodeType === 1) {
                 const text = node.innerText || "";
                 if (text.includes(username + " won the battle")) {
-                    window.alert("YOU WON!");
+                    my_result = "win";
+                    // Opponent name will come from the other rating message
                 } else if (text.includes("won the battle")) {
-                    window.alert("YOU LOST!");
+                    my_result = "loss";
+                    const strong = node.querySelector("strong");
+                    if (strong) {
+                        opponent = strong.innerText;
+                    }
                 }
-                // Catch the rating changes too
-                if (text.includes("rating:")) {
-                    console.log("rating: " + text);
-                }
+                 
+                 if (text.includes(username) && text.includes("rating:")) {
+                     
+                     const rating_match = text.match(/→ (\d+)/)
+                        if (rating_match) {
+                            my_rating = rating_match[1]
+                        }
+                        const change_match = text.match(/([+-]\d+)/)
+                        if (change_match) {
+                            my_ratingChange = parseInt(change_match[1])
+                        }
+
+                        const battleData = {
+                            pokemon: team,
+                            result: my_result,
+                            rating: parseInt(my_rating),
+                            ratingChange: my_ratingChange,
+                            opponent: opponent,
+                            date: today
+                        }
+
+                        fetch("http://localhost:3000/team", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(battleData)
+                        })
+                     
+                 }
+               
             }
         }
     }
+    
 });
-
 observer.observe(document.body, { childList: true, subtree: true });
-
-
-
-{/* <div class="battle-history"><strong>deslant</strong> won the battle!<br></div>
-<div class="chat">deslant's rating: 1373 → <strong>1396</strong><br>(+23 for winning)</div>
-
-
-<div class="chat">******'s rating: 1425 → <strong>1402</strong><br>(-23 for losing)</div> */}
-
-
 
 // {
 //     "teams": [
@@ -65,10 +98,3 @@ observer.observe(document.body, { childList: true, subtree: true });
 //       }
 //     ]
 //   }
-
-
-// edit teams.json
-
-const jsonDataBefore = require('/teams.json');
-console.log('Before updating JSON:');
-console.log(JSON.stringify(jsonDataBefore, null, 2));
