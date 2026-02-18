@@ -18,7 +18,7 @@
     let opponent = ""
     let my_ratingChange = 0
     const today = new Date().toISOString().split('T')[0]
-const username = document.querySelector(".username")?.innerText;
+const username = document.querySelector(".username")?.innerText || "mysteriousmeatman";
 let pokemon = ""
 const observer = new MutationObserver((mutations) => {
     // Team detection
